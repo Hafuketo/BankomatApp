@@ -8,6 +8,25 @@ namespace BankomatApp.UI
 {
     public static class Utility
     {
+        //Prints message with specified color
+        public static void PrintMessage(string msg, bool success)
+        {
+            if (success)
+            {
+                // Used when input is correct
+                Console.ForegroundColor = ConsoleColor.Yellow;
+
+
+            } else
+            {
+                // Used when input is wrong
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
+            Console.WriteLine(msg);
+            Console.ResetColor();
+            PressEnterToContinue();
+        }
+
         public static string GetUserInput(string prompt)
         {
             Console.WriteLine($"Enter {prompt}");

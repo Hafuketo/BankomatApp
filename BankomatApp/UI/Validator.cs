@@ -32,7 +32,7 @@ namespace BankomatApp.UI
                 }
                 catch
                 {
-                    Console.WriteLine("Invalid input, try again");
+                    Utility.PrintMessage("Invalid input, try again.",false);
                 }
             }
             return default;
