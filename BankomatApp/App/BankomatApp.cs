@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace BankomatApp.App
 {
-    class BankomatApp
+    public class BankomatApp
     {
         private List<UserAccount> userAccountList;
         private UserAccount selectedAccount;
@@ -19,16 +19,6 @@ namespace BankomatApp.App
                 new UserAccount { Id = 3, FullName = "Debb", AccountNumber = 123125, CardNumber = 321323, CardPin = 1221, AcoountBalance = 20000.00m, IsLocked = false },
             };
         }
-        static void Main(string[] args)
-        {
-            AppScreen.Welcome();
-            // string cardNumber = Utility.GetUserInput("your card numer");
-            long cardNumber = Validator.Convert<long>("Your card num");
-
-            Console.WriteLine($"Your card number is {cardNumber}");
-
-            Utility.PressEnterToContinue();
-
-        }
+        
     }
 }
