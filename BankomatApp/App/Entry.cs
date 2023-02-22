@@ -13,9 +13,14 @@ namespace BankomatApp.App
         {
             AppScreen.Welcome();
             
-            long cardNumber = Validator.Convert<long>("Your card num");
+            //long cardNumber = Validator.Convert<long>("Your card num");
 
-            Console.WriteLine($"Your card number is {cardNumber}");
+            //Console.WriteLine($"Your card number is {cardNumber}");
+
+            BankomatApp bankomatApp = new BankomatApp();
+            bankomatApp.InitializeData();
+            bankomatApp.CheckUserCardNumAndPassword();
+            bankomatApp.Welcome();
 
             Utility.PressEnterToContinue();
 
