@@ -33,11 +33,9 @@ namespace BankomatApp.UI
         {
             UserAccount tempUserAccount = new UserAccount();
 
-            tempUserAccount.CardNumber = Validator.Convert<long>("Your card number: ");
-            tempUserAccount.CardPin = Convert.ToInt32(Utility.GetSecretInput("Enter your card PIN: "));
-
+            tempUserAccount.CardNumber = Validator.Convert<long>("your card number.");
+            tempUserAccount.CardPin = Convert.ToInt32(Utility.GetSecretInput("Enter your card PIN"));
             return tempUserAccount;
-
         }
 
         internal static void LoginProgress()
@@ -49,8 +47,7 @@ namespace BankomatApp.UI
         internal static void PrintLockScreen()
         {
             Console.Clear();
-            Utility.PrintMessage("Your account is locked. Please go to the nearest branch to unlock your account.", true);
-            Utility.PressEnterToContinue();
+            Utility.PrintMessage("Your account is locked. Please go to the nearest branch to unlock your account.", "yellow");
             Environment.Exit(1);
         }
     }

@@ -21,9 +21,6 @@ namespace BankomatApp.App
             bankomatApp.InitializeData();
             bankomatApp.CheckUserCardNumAndPassword();
             bankomatApp.Welcome();
-
-            Utility.PressEnterToContinue();
-
         }
     }
 }

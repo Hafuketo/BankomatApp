@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,20 +20,19 @@ namespace BankomatApp.UI
             {
                 if(isPrompt)
                     Console.WriteLine(prompt);
-                    
                 isPrompt = false;
 
                 ConsoleKeyInfo inputKey = Console.ReadKey(true);
 
                 if (inputKey.Key == ConsoleKey.Enter)
                 {
-                    if(input.Length == 6)
+                    if(input.Length == 4)
                     {
                         break;
                     } 
                     else
                     {
-                        PrintMessage("\nPlease enter 6 digits", false);
+                        PrintMessage("\nPlease enter 4 digits", "red");
                         input.Clear();
                         isPrompt = true;
                         continue;
@@ -48,26 +48,35 @@ namespace BankomatApp.UI
                     input.Append(inputKey.KeyChar);
                     Console.Write(asterics + "*");
                 }
-                
             }
             return input.ToString();
         }
 
         //Prints message with specified color
-        public static void PrintMessage(string msg, bool success)
+        public static void PrintMessage(string msg, string color)
         {
-            if (success)
-            {
-                // Used when input is correct
-                Console.ForegroundColor = ConsoleColor.Yellow;
 
-
-            } else
+            switch (color)
             {
-                // Used when input is wrong
-                Console.ForegroundColor = ConsoleColor.Red;
+                case "yellow":
+                    // Used when input is correct
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    break;
+                case "red":
+                    // Used when input is wrong
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    break;
+                default:
+                    // code block
+                    break;
             }
+
+
+
+            // Print message
             Console.WriteLine(msg);
+
+            // Restore color
             Console.ResetColor();
             PressEnterToContinue();
         }
@@ -78,19 +87,20 @@ namespace BankomatApp.UI
             return Console.ReadLine();
         }
 
-        public static void PrintDotAnimation(int timer = 10)
+        public static void PrintDotAnimation(int timer = 25)
         {
+            Console.Write("\nLoading");
             for (int i = 0; i < timer; i++)
             {
                 Console.Write(".");
-                Thread.Sleep(200);
+                Thread.Sleep(20);
             }
             Console.Clear();
         }
 
         public static void PressEnterToContinue()
         {
-            Console.WriteLine("\n\nTryck på en aknapp för att fortsätta...\n");
+            Console.WriteLine("\n\nTryck retur för att fortsätta...\n");
             Console.ReadLine();
         }
     }
