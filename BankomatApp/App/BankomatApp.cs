@@ -15,6 +15,7 @@ namespace BankomatApp
         private List<UserAccount> userAccountList;
         private UserAccount selectedAccount;
         private List<Domain.Entities.Transaction> _listOfTransactions;
+        private const decimal minimumKeptAmount = 100;
 
         public void Run()
         {
@@ -98,10 +99,12 @@ namespace BankomatApp
                     PlaceDeposit();
                     break;
                 case (int)AppMenu.MakeWithdrawal:
-                    Console.WriteLine("Gör uttag...");
+                    //Console.WriteLine("Gör uttag...");
+                    MakeWithdrawal();
                     break;
                 case (int)AppMenu.InternalTransfer:
                     Console.WriteLine("Flytta mellan konton...");
+                    //InternalTransfer();
                     break;
                 case (int)AppMenu.ViewTransactions:
                     Console.WriteLine("Ser transaktionshistorik...");
@@ -113,6 +116,7 @@ namespace BankomatApp
                     break;
                 default:
                     Utility.PrintMessage("Invalid option.", "red");
+                    ProccessMenuOption();
                     break;
             }
         }
@@ -124,28 +128,28 @@ namespace BankomatApp
 
         public void PlaceDeposit()
         {
-            Console.WriteLine("\nOnly multiples of 500 and 1000 kr allowen.\n");
-            var transaction_amt = Validator.Convert<int>($"Tot amount ");
+            Console.WriteLine("\nEndast multiplicerbara med 100 kr tillåtet.\n");
+            var transaction_amt = Validator.Convert<int>($"Total summa: ");
 
             // Simulate counting
-            Console.WriteLine("\nChecking and counting bank notes.");
+            Console.WriteLine("\nKontrollerar och räknar sedlar.");
             Utility.PrintDotAnimation();
             Console.WriteLine("");
 
             // Some guard clause
-            if (transaction_amt <= 0) {
-                Utility.PrintMessage("Amount needs to be greater than 0, try again.","red");
+            if (transaction_amt < 100) {
+                Utility.PrintMessage("Beloppet måste vara minst 100, försök igen.","red");
                 return;
             }
-            if (transaction_amt % 500 != 0)
+            if (transaction_amt % 100 != 0)
             {
-                Utility.PrintMessage($"Enter deposit amount in multiples of 500 or 1000. Try again.", "red");
+                Utility.PrintMessage($"Beloppet måste vara multiplicerbart med 100. Försök igen.", "red");
                 return;
             }
 
             if(PreviewBankNotesCount(transaction_amt) == false)
             {
-                Utility.PrintMessage($"You have cancelled your action.", "red");
+                Utility.PrintMessage($"Du har avbrutit.", "red");
                 return;
             }
 
@@ -156,24 +160,68 @@ namespace BankomatApp
             selectedAccount.AccountBalance += transaction_amt;
 
             // Print sucessmsg
-            Utility.PrintMessage($"Your deposit of {Utility.FormatAmount(transaction_amt)} was sucessful.", "green");
+            Utility.PrintMessage($"Du har gjort en insättning på {Utility.FormatAmount(transaction_amt)}.", "green");
      
         }
 
         public void MakeWithdrawal()
         {
-            throw new NotImplementedException();
+            var transaction_amt = 0;
+            int selectedAmount = AppScreen.SelectAmount();
+            if(selectedAmount == -1)
+            {
+                selectedAmount = AppScreen.SelectAmount();
+            } else if (selectedAmount != 0)
+            {
+                transaction_amt = selectedAmount;
+            } else
+            {
+                transaction_amt = Validator.Convert<int>($"amount ");
+            }
+
+            // input validation
+            if(transaction_amt <= 0)
+            {
+                Utility.PrintMessage("Amount needs to be greater than 0. try again.", "red");
+                return;
+            }
+            if(transaction_amt % 100 != 0)
+            {
+                Utility.PrintMessage("You can only withdraw amount in multiples of 100. Try again", "red");
+                return;
+            }
+
+            //Business lfc validations
+            if (transaction_amt > selectedAccount.AccountBalance)
+            {
+                Utility.PrintMessage($"Withdrawal failed. Your balance is too low to withdraw" +
+                    $"{Utility.FormatAmount(transaction_amt)}", "red");
+                return;
+            }
+            if((selectedAccount.AccountBalance - transaction_amt) < minimumKeptAmount)
+            {
+                Utility.PrintMessage($"Uttag misslyckades. Ditt kontos saldå är för lågt. Du måste ha minst {Utility.FormatAmount(minimumKeptAmount)} tillgängligt" , "red");
+            }
+            // Bind withdrawal details to transaction object
+            InsertTransaction(selectedAccount.Id, TransactionType.Withdrawal, -transaction_amt, "");
+
+            // Update account balance
+            selectedAccount.AccountBalance -= transaction_amt;
+
+            // Sucess message
+            Utility.PrintMessage($"You have sucessfully withdrawn {Utility.FormatAmount(transaction_amt)}.", "red");
+
         }
 
         private bool PreviewBankNotesCount(int amount)
         {
-            int thousandNotesCount = amount / 1000;
-            int fiveHundredNotesCount = (amount % 1000) / 500;
+            int fiveHundredNotesCount = amount / 500;
+            int oneHundredNotesCount = (amount % 500) / 100;
 
             Console.WriteLine("\nSummary");
             Console.WriteLine("------");
-            Console.WriteLine($"1000 x {thousandNotesCount} ) = {1000 * thousandNotesCount}");
             Console.WriteLine($"500 x {fiveHundredNotesCount} ) = {500 * fiveHundredNotesCount}");
+            Console.WriteLine($"100 x {oneHundredNotesCount} ) = {100 * oneHundredNotesCount}");
             Console.WriteLine($"Total amount: {Utility.FormatAmount(amount)}\n\n");
 
             int opt = Validator.Convert<int>("1 to confirm");

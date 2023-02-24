@@ -2,12 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BankomatApp.UI
 {
-    public static class AppScreen
+    public class AppScreen
     {
         internal static void Welcome()
         {
@@ -72,9 +73,66 @@ namespace BankomatApp.UI
 
         internal static void LogOutProgress()
         {
-            Console.WriteLine("Thank you for using the ATM app");
+            Console.WriteLine("Tack för att du använder bankomatappen.");
             Utility.PrintDotAnimation();
             Console.Clear();
+        }
+
+        internal static int SelectAmount()
+        {
+            Console.WriteLine("");
+            Console.WriteLine(":1.100 kr     5.1000 kr");
+            Console.WriteLine(":2.200 kr     6.1500 kr");
+            Console.WriteLine(":3.400 kr     7.2000 kr");
+            Console.WriteLine(":4.500 kr     8.5000 kr");
+            Console.WriteLine(":0.Övrigt belopp");
+            Console.WriteLine("");
+
+            int selectedAmount = Validator.Convert<int>("option: ");
+            switch(selectedAmount)
+            {
+                case 1:
+                    return 100;
+                    break;
+                case 2:
+                    return 200;
+                    break;
+                case 3:
+                    return 400;
+                    break;
+                case 4:
+                    return 500;
+                    break;
+                case 5:
+                    return 1000;
+                    break;
+                case 6:
+                    return 1500;
+                    break;
+                case 7:
+                    return 2000;
+                    break;
+                case 8:
+                    return 5000;
+                    break;
+                case 0:
+                    return 0;
+                    break;
+                default:
+                    Utility.PrintMessage("Ogiltigt val. Försök igen.", "red");
+                    return -1;
+                    break;
+            }
+        }
+
+        internal InternalTransfer InternalTransferForm()
+        {
+            var internalTransfer = new InternalTransfer();
+            internalTransfer.ReciepeintBankAccountNumber = Validator.Convert<long>("Mottagares kontonummer: ");
+            internalTransfer.TransferAmount = Validator.Convert<decimal>("mängd ");
+            internalTransfer.ReciepeintBankAccountName = Utility.GetUserInput("Mottagares namn: ");
+            return internalTransfer;
+
         }
     }
 }
