@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -9,6 +10,13 @@ namespace BankomatApp.UI
 {
     public static class Utility
     {
+        private static long tranId;
+        private static CultureInfo culture = new CultureInfo("sv-se");
+
+        public static long GetTransactionId()
+        {
+            return ++tranId;
+        }
         public static string GetSecretInput(string prompt)
         {
             bool isPrompt = true;
@@ -26,13 +34,13 @@ namespace BankomatApp.UI
 
                 if (inputKey.Key == ConsoleKey.Enter)
                 {
-                    if(input.Length == 4)
+                    if(input.Length == 1)
                     {
                         break;
                     } 
                     else
                     {
-                        PrintMessage("\nPlease enter 4 digits", "red");
+                        PrintMessage("\nPlease enter 1 digits", "red");
                         input.Clear();
                         isPrompt = true;
                         continue;
@@ -59,12 +67,14 @@ namespace BankomatApp.UI
             switch (color)
             {
                 case "yellow":
-                    // Used when input is correct
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     break;
                 case "red":
-                    // Used when input is wrong
                     Console.ForegroundColor = ConsoleColor.Red;
+                    break;
+                case "green":
+                    // Used when input is wrong
+                    Console.ForegroundColor = ConsoleColor.Green;
                     break;
                 default:
                     // code block
@@ -87,13 +97,13 @@ namespace BankomatApp.UI
             return Console.ReadLine();
         }
 
-        public static void PrintDotAnimation(int timer = 25)
+        public static void PrintDotAnimation(int timer = 15)
         {
             Console.Write("\nLoading");
             for (int i = 0; i < timer; i++)
             {
                 Console.Write(".");
-                Thread.Sleep(20);
+                Thread.Sleep(10);
             }
             Console.Clear();
         }
@@ -102,6 +112,11 @@ namespace BankomatApp.UI
         {
             Console.WriteLine("\n\nTryck retur för att fortsätta...\n");
             Console.ReadLine();
+        }
+        
+        public static string FormatAmount(decimal amt)
+        {
+            return String.Format(culture, "{0:C2}", amt);
         }
     }
 }

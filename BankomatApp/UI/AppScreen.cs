@@ -50,5 +50,31 @@ namespace BankomatApp.UI
             Utility.PrintMessage("Your account is locked. Please go to the nearest branch to unlock your account.", "yellow");
             Environment.Exit(1);
         }
+
+        internal static void WelcomeCustomer(string fullName)
+        {
+            Console.WriteLine($"Välkommen tillbaka, {fullName}");
+            Utility.PressEnterToContinue();
+        }
+
+        internal static void DisplayAppMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("#---My ATM App Menu----#");
+            Console.WriteLine("|                      |");
+            Console.WriteLine("| 1. Account Balance   |");
+            Console.WriteLine("| 2. Insägttning       |");
+            Console.WriteLine("| 3. Uttag             |");
+            Console.WriteLine("| 4. Flytta            |");
+            Console.WriteLine("| 5. Transaktioner     |");
+            Console.WriteLine("| 6. Logga ut          |");
+        }
+
+        internal static void LogOutProgress()
+        {
+            Console.WriteLine("Thank you for using the ATM app");
+            Utility.PrintDotAnimation();
+            Console.Clear();
+        }
     }
 }
