@@ -20,7 +20,7 @@ namespace BankomatApp.UI
         public static string GetSecretInput(string prompt)
         {
             bool isPrompt = true;
-            string asterics = "";
+            string passInput = "";
 
             StringBuilder input = new StringBuilder();
 
@@ -40,21 +40,23 @@ namespace BankomatApp.UI
                     } 
                     else
                     {
-                        PrintMessage("\nPlease enter 1 digits", "red");
+                        PrintMessage("\nVänligen fyll i PIN (1 siffra)", "red");
                         input.Clear();
                         isPrompt = true;
                         continue;
                     }
                 }
 
-                if (inputKey.Key == ConsoleKey.Backspace && input.Length > 0)
+                if (inputKey.Key == ConsoleKey.Backspace)
                 {
-                    input.Remove(input.Length - 1, 1);
+                    passInput = "";
+                    input.Clear();
+                    Console.WriteLine(passInput);
                 }
-                else if (inputKey.Key != ConsoleKey.Backspace) 
+                else
                 {
                     input.Append(inputKey.KeyChar);
-                    Console.Write(asterics + "*");
+                    Console.Write(passInput + "*");
                 }
             }
             return input.ToString();
@@ -73,8 +75,10 @@ namespace BankomatApp.UI
                     Console.ForegroundColor = ConsoleColor.Red;
                     break;
                 case "green":
-                    // Used when input is wrong
                     Console.ForegroundColor = ConsoleColor.Green;
+                    break;
+                case "cyan":
+                    Console.ForegroundColor = ConsoleColor.Cyan;
                     break;
                 default:
                     // code block
@@ -87,8 +91,7 @@ namespace BankomatApp.UI
             Console.WriteLine(msg);
 
             // Restore color
-            Console.ResetColor();
-            PressEnterToContinue();
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
         public static string GetUserInput(string prompt)
@@ -110,7 +113,7 @@ namespace BankomatApp.UI
 
         public static void PressEnterToContinue()
         {
-            Console.WriteLine("\n\nTryck retur för att fortsätta...\n");
+            Console.WriteLine("\nTryck retur för att fortsätta...\n");
             Console.ReadLine();
         }
         

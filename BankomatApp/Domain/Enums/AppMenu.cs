@@ -11,7 +11,7 @@ namespace BankomatApp.Domain.Enums
         CheckBalance = 1,
         PlaceDeposit,
         MakeWithdrawal,
-        InternalTransfer,
+        //InternalTransfer,
         ViewTransactions,
         Logout
     }

@@ -10,21 +10,27 @@ using System.Transactions;
 
 namespace BankomatApp
 {
-    public class BankomatApp : IUserLogin, IUserAccountActions, ITransaction
+    public class BankomatApp : IUserLogin, IUserAccountActions
     {
         private List<UserAccount> userAccountList;
         private UserAccount selectedAccount;
         private List<Domain.Entities.Transaction> _listOfTransactions;
         private const decimal minimumKeptAmount = 100;
 
+        // Automatically runs when app is opened
         public void Run()
         {
             AppScreen.Welcome();
             CheckUserCardNumAndPassword();
             AppScreen.WelcomeCustomer(selectedAccount.FullName);
-            AppScreen.DisplayAppMenu();
-            ProccessMenuOption();
+            while(true)
+            {
+                AppScreen.DisplayAppMenu();
+                ProccessMenuOption();
+            }
         }
+
+        // Creates a list of users with accounts and pin codes
         public void InitializeData()
         {
             userAccountList = new List<UserAccount>
@@ -36,6 +42,7 @@ namespace BankomatApp
             _listOfTransactions = new List<Domain.Entities.Transaction>();
         }
 
+        // Login checker for card number and PIN
         public void CheckUserCardNumAndPassword()
         {
             bool isCorrectLogin = false;
@@ -86,6 +93,7 @@ namespace BankomatApp
 
         }
 
+        // Checks which option was chosen
         private void ProccessMenuOption()
         {
             switch(Validator.Convert<int>("an option:"))
@@ -102,12 +110,13 @@ namespace BankomatApp
                     //Console.WriteLine("Gör uttag...");
                     MakeWithdrawal();
                     break;
-                case (int)AppMenu.InternalTransfer:
-                    Console.WriteLine("Flytta mellan konton...");
+                /*case (int)AppMenu.InternalTransfer:
+                    //Console.WriteLine("Flytta mellan konton...");
                     //InternalTransfer();
-                    break;
+                    break;*/
                 case (int)AppMenu.ViewTransactions:
                     Console.WriteLine("Ser transaktionshistorik...");
+                    ViewTransaction();
                     break;
                 case (int)AppMenu.Logout:
                     AppScreen.LogOutProgress();
@@ -121,11 +130,14 @@ namespace BankomatApp
             }
         }
 
+        // See how much money is on the account
         public void CheckBalance()
         {
             Utility.PrintMessage($"Your account balance is: {Utility.FormatAmount(selectedAccount.AccountBalance)}", "green");
+            Utility.PressEnterToContinue();
         }
 
+        // Deposit money to account
         public void PlaceDeposit()
         {
             Console.WriteLine("\nEndast multiplicerbara med 100 kr tillåtet.\n");
@@ -164,6 +176,7 @@ namespace BankomatApp
      
         }
 
+        // Withdraw money from account 
         public void MakeWithdrawal()
         {
             var transaction_amt = 0;
@@ -180,22 +193,21 @@ namespace BankomatApp
             }
 
             // input validation
-            if(transaction_amt <= 0)
+            if(transaction_amt <= 100)
             {
-                Utility.PrintMessage("Amount needs to be greater than 0. try again.", "red");
+                Utility.PrintMessage("Uttaget måste vara minst 100 kronor. Försök igen.", "red");
                 return;
             }
-            if(transaction_amt % 100 != 0)
+            /*if(transaction_amt % 100 != 0)
             {
-                Utility.PrintMessage("You can only withdraw amount in multiples of 100. Try again", "red");
+                Utility.PrintMessage("Du kan endast ta ut  can only withdraw amount in multiples of 100. Try again", "red");
                 return;
-            }
+            }*/
 
             //Business lfc validations
             if (transaction_amt > selectedAccount.AccountBalance)
             {
-                Utility.PrintMessage($"Withdrawal failed. Your balance is too low to withdraw" +
-                    $"{Utility.FormatAmount(transaction_amt)}", "red");
+                Utility.PrintMessage($"Uttag misslyckades. Du har för lite pengar för att ta ut {Utility.FormatAmount(transaction_amt)}", "red");
                 return;
             }
             if((selectedAccount.AccountBalance - transaction_amt) < minimumKeptAmount)
@@ -213,21 +225,23 @@ namespace BankomatApp
 
         }
 
+        // Shows how many bank notes will be withdrawn
         private bool PreviewBankNotesCount(int amount)
         {
             int fiveHundredNotesCount = amount / 500;
             int oneHundredNotesCount = (amount % 500) / 100;
 
-            Console.WriteLine("\nSummary");
+            Console.WriteLine("\nSummering");
             Console.WriteLine("------");
-            Console.WriteLine($"500 x {fiveHundredNotesCount} ) = {500 * fiveHundredNotesCount}");
-            Console.WriteLine($"100 x {oneHundredNotesCount} ) = {100 * oneHundredNotesCount}");
-            Console.WriteLine($"Total amount: {Utility.FormatAmount(amount)}\n\n");
+            Console.WriteLine($"500 x {fiveHundredNotesCount} = {500 * fiveHundredNotesCount}");
+            Console.WriteLine($"100 x {oneHundredNotesCount} = {100 * oneHundredNotesCount}");
+            Console.WriteLine($"Totalt belopp: {Utility.FormatAmount(amount)}\n\n");
 
-            int opt = Validator.Convert<int>("1 to confirm");
+            int opt = Validator.Convert<int>("1 för att godkänna");
             return opt.Equals(1);
         }
 
+        // Choosing which account for inserting
         public void InsertTransaction(long _UserBankAccountId, TransactionType _tranType, decimal _tranAmount, string _desc)
         {
             // create a new transaction object
@@ -245,9 +259,19 @@ namespace BankomatApp
             _listOfTransactions.Add(transaction);
         }
 
+        // See history of transactions
         public void ViewTransaction()
         {
-            throw new NotImplementedException();
+            var filteredTransactionList = _listOfTransactions.Where(t => t.UserBankAccountId == selectedAccount.Id).ToList();
+            // Check if there are any transactions
+            if(filteredTransactionList.Count <= 0 )
+            {
+                Utility.PrintMessage("You have no transactions yet", "yellow");
+            }
+            else
+            {
+                Utility.PrintMessage("You have some transactions", "green");
+            }
         }
     }
 }

@@ -22,11 +22,17 @@ namespace BankomatApp.UI
             Console.ForegroundColor = ConsoleColor.White;
 
             // Intro top text
-            Console.WriteLine("\n\n----------------Välkommen till min bankomat----------------\n\n");
+            Console.WriteLine("");
+            Utility.PrintMessage("#==============================================================#" +
+                               "\n|----------------Välkommen till Neko's bankomat----------------|\n" +
+                                 "#==============================================================#\n", "cyan");
+
+            Utility.PrintMessage(
+                "                         ____.-´`-.____\r\n                   _____[.-´________`-.]_____\r\n                  [__________ BANK __________]\r\n                   [________________________]\r\n                     ||==||==||==||==||==||\r\n                     ||==||==||==||==||==||\r\n                     ||==||==||==||==||==||\r\n                     ||==||==||  ||==||==||\r\n                     ||==||==||  ||==||==||\r\n                    /======================\\\r\n                   /========================\\\n", "cyan");
 
             // Prompt user to insert card
-            Console.WriteLine("Vänligen sätt in ditt bankkort i automaten");
-            Console.WriteLine("Obs!; En riktig automat skulle här begära och läsa av ett fysiskt kort");
+            Console.WriteLine("Vänligen sätt in ditt bankkort i bankomaten");
+            Utility.PrintMessage("(Obs!; En riktig automat skulle här begära och läsa av ett fysiskt kort)", "yellow");
             Utility.PressEnterToContinue();
         }
 
@@ -34,46 +40,46 @@ namespace BankomatApp.UI
         {
             UserAccount tempUserAccount = new UserAccount();
 
-            tempUserAccount.CardNumber = Validator.Convert<long>("your card number.");
-            tempUserAccount.CardPin = Convert.ToInt32(Utility.GetSecretInput("Enter your card PIN"));
+            tempUserAccount.CardNumber = Validator.Convert<long>("Kortnummer: ");
+            tempUserAccount.CardPin = Convert.ToInt32(Utility.GetSecretInput("PIN-kod: "));
             return tempUserAccount;
         }
 
         internal static void LoginProgress()
         {
-            Console.WriteLine("\nChecking card number and PIN...");
+            Console.WriteLine("\nKontrollerar kortnummer och PIN...");
             Utility.PrintDotAnimation();
         }
 
         internal static void PrintLockScreen()
         {
             Console.Clear();
-            Utility.PrintMessage("Your account is locked. Please go to the nearest branch to unlock your account.", "yellow");
+            Utility.PrintMessage("Ditt konto har låsts. Vänligen kontakta närmaste bankkontor för att få hjälp.", "yellow");
             Environment.Exit(1);
         }
 
         internal static void WelcomeCustomer(string fullName)
         {
-            Console.WriteLine($"Välkommen tillbaka, {fullName}");
+            Console.WriteLine($"Välkommen {fullName}");
             Utility.PressEnterToContinue();
         }
 
         internal static void DisplayAppMenu()
         {
             Console.Clear();
-            Console.WriteLine("#---My ATM App Menu----#");
+            Console.WriteLine("#---Bankomaten meny----#");
             Console.WriteLine("|                      |");
-            Console.WriteLine("| 1. Account Balance   |");
-            Console.WriteLine("| 2. Insägttning       |");
+            Console.WriteLine("| 1. Konto mängd pengar|");
+            Console.WriteLine("| 2. Insättning        |");
             Console.WriteLine("| 3. Uttag             |");
-            Console.WriteLine("| 4. Flytta            |");
-            Console.WriteLine("| 5. Transaktioner     |");
-            Console.WriteLine("| 6. Logga ut          |");
+            Console.WriteLine("| 4. Historik          |");
+            Console.WriteLine("| 5. Logga ut          |");
         }
 
         internal static void LogOutProgress()
         {
-            Console.WriteLine("Tack för att du använder bankomatappen.");
+            Console.WriteLine("Tack för att du använt denna bankomat.");
+            Console.WriteLine("Välkommen åter.");
             Utility.PrintDotAnimation();
             Console.Clear();
         }
@@ -88,7 +94,7 @@ namespace BankomatApp.UI
             Console.WriteLine(":0.Övrigt belopp");
             Console.WriteLine("");
 
-            int selectedAmount = Validator.Convert<int>("option: ");
+            int selectedAmount = Validator.Convert<int>("Val: ");
             switch(selectedAmount)
             {
                 case 1:
@@ -125,14 +131,5 @@ namespace BankomatApp.UI
             }
         }
 
-        internal InternalTransfer InternalTransferForm()
-        {
-            var internalTransfer = new InternalTransfer();
-            internalTransfer.ReciepeintBankAccountNumber = Validator.Convert<long>("Mottagares kontonummer: ");
-            internalTransfer.TransferAmount = Validator.Convert<decimal>("mängd ");
-            internalTransfer.ReciepeintBankAccountName = Utility.GetUserInput("Mottagares namn: ");
-            return internalTransfer;
-
-        }
     }
 }
