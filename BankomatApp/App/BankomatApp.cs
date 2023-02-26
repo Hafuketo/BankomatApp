@@ -15,7 +15,6 @@ namespace BankomatApp
         private List<UserAccount> userAccountList;
         private UserAccount selectedAccount;
         private List<Domain.Entities.Transaction> _listOfTransactions;
-        private const decimal minimumKeptAmount = 100;
 
         // Automatically runs when app is opened
         public void Run()
@@ -146,24 +145,37 @@ namespace BankomatApp
         {
             var transaction_amt = 0;
             int selectedAmount = AppScreen.SelectAmount();
+
             if(selectedAmount == -1)
             {
+                // Invalid choice
                 MakeWithdrawal();
                 return;
             }
             else if (selectedAmount != 0)
             {
+                // Preset amount
                 transaction_amt = selectedAmount;
             }
             else
             {
-                transaction_amt = Validator.Convert<int>($"mängd ");
+                // Your own amount
+                Console.Clear();
+                transaction_amt = Validator.Convert<int>($"Välj belopp: ");
             }
 
             // input validation
-            if(transaction_amt <= 100)
+            if(transaction_amt <= 0)
             {
-                Utility.PrintMessage("Uttaget måste vara minst 100 kronor. Försök igen.", "red");
+                Utility.PrintMessage("Uttaget måste vara mer än 0. Försök igen.", "red");
+                Utility.PressEnterToContinue();
+                return;
+            }
+
+            if (transaction_amt % 50 != 0)
+            {
+                Utility.PrintMessage("Uttag görs med 50, 100 och 500-kronorssedlar. Vänligen försök igen.", "red");
+                Utility.PressEnterToContinue();
                 return;
             }
 
@@ -171,11 +183,8 @@ namespace BankomatApp
             if (transaction_amt > selectedAccount.AccountBalance)
             {
                 Utility.PrintMessage($"Uttag misslyckades. Du har för lite pengar för att ta ut {Utility.FormatAmount(transaction_amt)}", "red");
+                Utility.PressEnterToContinue();
                 return;
-            }
-            if((selectedAccount.AccountBalance - transaction_amt) < minimumKeptAmount)
-            {
-                Utility.PrintMessage($"Uttag misslyckades. Ditt kontos saldå är för lågt. Du måste ha minst {Utility.FormatAmount(minimumKeptAmount)} tillgängligt" , "red");
             }
             // Bind withdrawal details to transaction object
             InsertTransaction(selectedAccount.Id, TransactionType.Withdrawal, -transaction_amt, "");
@@ -183,9 +192,23 @@ namespace BankomatApp
             // Update account balance
             selectedAccount.AccountBalance -= transaction_amt;
 
+            if (PreviewBankNotesCount(transaction_amt) == false)
+            {
+                Utility.PrintMessage($"Du har avbrutit.", "red");
+                Utility.PressEnterToContinue();
+                return;
+            }
+
+            // Simulate counting
+            Console.Clear();
+            Console.WriteLine("\nKontrollerar uttag och räknar sedlar.");
+            Utility.PrintDotAnimation();
+            Console.WriteLine("");
+
             // Sucess message
-            Utility.PrintMessage($"You have successfully withdrawn " +
-                 $"{Utility.FormatAmount(transaction_amt)}.", "red");
+            Utility.PrintMessage($"Du har tagit ut " +
+                 $"{Utility.FormatAmount(transaction_amt)}.", "green");
+            Utility.PressEnterToContinue();
 
         }
 
@@ -196,14 +219,24 @@ namespace BankomatApp
             int oneHundredNotesCount = (amount % 500) / 100;
             int fiftyNotesCount = (amount % 100) / 50;
 
-            Console.WriteLine("\nSummering");
-            Console.WriteLine("------");
+            Console.Clear();
+
+            Utility.PrintMessage(
+             "#----- 2. Uttag -----#\n" +
+             "|                    |\n" +
+             "| Summering av uttag |\n" +
+             "|                    |\n" + 
+             "#--------------------#\n", "cyan");
+
             Console.WriteLine($"500 x {fiveHundredNotesCount} = {500 * fiveHundredNotesCount}");
             Console.WriteLine($"100 x {oneHundredNotesCount} = {100 * oneHundredNotesCount}");
             Console.WriteLine($"50 x {fiftyNotesCount} = {50 * fiftyNotesCount}");
-            Console.WriteLine($"Totalt belopp: {Utility.FormatAmount(amount)}\n\n");
+            Console.WriteLine($"\nTotalt belopp: {Utility.FormatAmount(amount)}\n\n");
 
-            int opt = Validator.Convert<int>("1 för att godkänna");
+            Utility.PrintMessage("1. Godkänn", "green");
+            Utility.PrintMessage("0. Avbryt", "red");
+
+            int opt = Validator.Convert<int>("");
             return opt.Equals(1);
         }
 
@@ -256,6 +289,7 @@ namespace BankomatApp
             var transaction_amt = Validator.Convert<int>($"Total summa: ");
 
             // Simulate counting
+            Console.Clear();
             Console.WriteLine("\nKontrollerar och räknar sedlar.");
             Utility.PrintDotAnimation();
             Console.WriteLine("");
@@ -268,14 +302,6 @@ namespace BankomatApp
                 PlaceDeposit();
             }
 
-            /*
-            if(PreviewBankNotesCount(transaction_amt) == false)
-            {
-                Utility.PrintMessage($"Du har avbrutit.", "red");
-                Utility.PressEnterToContinue();
-                return;
-            }*/
-
             // Bind transaction detalis to transaction object
             InsertTransaction(selectedAccount.Id, TransactionType.Deposit, transaction_amt, "");
 
@@ -284,6 +310,7 @@ namespace BankomatApp
 
             // Print sucessmsg
             Utility.PrintMessage($"Du har gjort en insättning på {Utility.FormatAmount(transaction_amt)}.", "green");
+            Utility.PressEnterToContinue();
 
         }
 

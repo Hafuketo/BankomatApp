@@ -102,18 +102,38 @@ namespace BankomatApp.UI
 
         public static void PrintDotAnimation(int timer = 15)
         {
-            Console.Write("\nLoading");
+            /*Console.Write("\nVänta...");
             for (int i = 0; i < timer; i++)
             {
                 Console.Write(".");
-                Thread.Sleep(10);
+                Thread.Sleep(100);
+            }*/
+
+            Console.Write("\nVänta... ");
+            for (int i = 0; i < timer; i++)
+            {
+                int waittime = 15;
+                Console.CursorVisible = false;
+                    Console.Write("/");
+                    Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
+                    System.Threading.Thread.Sleep(waittime);
+                    Console.Write("-");
+                    Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
+                    System.Threading.Thread.Sleep(waittime);
+                    Console.Write("\\");
+                    Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
+                    System.Threading.Thread.Sleep(waittime);
+                    Console.Write("|");
+                    Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
+                    System.Threading.Thread.Sleep(waittime);
             }
+            Console.CursorVisible = true;
             Console.Clear();
         }
 
         public static void PressEnterToContinue()
         {
-            Console.WriteLine("\nTryck retur för att fortsätta...\n");
+            Console.WriteLine("\nTryck retur för att fortsätta...");
             Console.ReadLine();
         }
         

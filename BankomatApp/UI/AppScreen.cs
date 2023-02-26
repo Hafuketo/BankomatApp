@@ -28,12 +28,16 @@ namespace BankomatApp.UI
                                  "#==============================================================#\n", "cyan");
 
             Utility.PrintMessage(
-                "                         ____.-´`-.____\r\n                   _____[.-´________`-.]_____\r\n                  [__________ BANK __________]\r\n                   [________________________]\r\n                     ||==||==||==||==||==||\r\n                     ||==||==||==||==||==||\r\n                     ||==||==||==||==||==||\r\n                     ||==||==||  ||==||==||\r\n                     ||==||==||  ||==||==||\r\n                    /======================\\\r\n                   /========================\\\n", "cyan");
+                "                         ____.-'`-.____\r\n                   _____[.-'________`-.]_____\r\n                  [__________ BANK __________]\r\n                   [________________________]\r\n                     ||==||==||==||==||==||\r\n                     ||==||==||==||==||==||\r\n                     ||==||==||==||==||==||\r\n                     ||==||==||  ||==||==||\r\n                     ||==||==||  ||==||==||     /\\__/\\\r\n                    /======================\\   ( ^,^  )_)\r\n                   /========================\\   (u  u   )", "cyan");
 
+
+            
             // Prompt user to insert card
-            Console.WriteLine("Vänligen sätt in ditt bankkort i bankomaten");
-            Utility.PrintMessage("(Obs!; En riktig automat skulle här begära och läsa av ett fysiskt kort)", "yellow");
-            Utility.PressEnterToContinue();
+            Console.WriteLine("Vänligen sätt in ditt bankkort i bankomaten\n");
+            Utility.PrintMessage(
+                "(Obs!; En riktig automat skulle här begära \n" +
+                "och läsa av ett fysiskt kort. Istället \n" +
+                "kommer du att fylla i ett kortnummer.)\n", "yellow");
         }
 
         internal static UserAccount UserLoginForm()
@@ -41,7 +45,9 @@ namespace BankomatApp.UI
             UserAccount tempUserAccount = new UserAccount();
 
             tempUserAccount.CardNumber = Validator.Convert<long>("Kortnummer: ");
+            Console.WriteLine("");
             tempUserAccount.CardPin = Convert.ToInt32(Utility.GetSecretInput("PIN-kod: "));
+            Console.WriteLine("");
             return tempUserAccount;
         }
 
@@ -55,7 +61,9 @@ namespace BankomatApp.UI
         {
             Console.Clear();
             Utility.PrintMessage("Ditt konto har låsts. Vänligen kontakta närmaste bankkontor för att få hjälp.", "yellow");
-            Environment.Exit(1);
+            Utility.PressEnterToContinue();
+            //Environment.Exit(1);
+
         }
 
         internal static void WelcomeCustomer(string fullName)
@@ -91,13 +99,19 @@ namespace BankomatApp.UI
 
         internal static int SelectAmount()
         {
-            Console.WriteLine("\nHur mycket vill du ta ut?\n");
-            Console.WriteLine(":1.100 kr     5.1000 kr");
-            Console.WriteLine(":2.200 kr     6.1500 kr");
-            Console.WriteLine(":3.400 kr     7.2000 kr");
-            Console.WriteLine(":4.500 kr     8.5000 kr");
-            Console.WriteLine(":0.Övrigt belopp");
-            Console.WriteLine("");
+            Console.Clear();
+            Utility.PrintMessage(
+            "#--------- 2. Uttag ---------#\n" +
+            "|                            |\n" +
+            "| Hur mycket vill du ta ut?  |\n" +
+            "|                            |\n" +
+            "| 1. 100 kr      5. 1000 kr  |\n" +
+            "| 2. 200 kr      6. 1500 kr  |\n" +
+            "| 3. 400 kr      7. 2000 kr  |\n" +
+            "| 4. 500 kr      8. 5000 kr  |\n" +
+            "| 0. Övrigt belopp           |\n" +
+            "|                            |\n" +
+            "#----------------------------#\n", "cyan");
 
             int selectedAmount = Validator.Convert<int>("Val: ");
             switch(selectedAmount)

@@ -32,7 +32,7 @@ namespace BankomatApp.UI
                 }
                 catch
                 {
-                    Utility.PrintMessage("Ogiltig input. Försök igen.", "red");
+                    Utility.PrintMessage("Ogiltigt val. Försök igen.", "red");
                 }
             }
             return default;
