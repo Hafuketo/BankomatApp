@@ -96,7 +96,7 @@ namespace BankomatApp.UI
 
         public static string GetUserInput(string prompt)
         {
-            Console.WriteLine($"Enter {prompt}");
+            Console.WriteLine($"{prompt}");
             return Console.ReadLine();
         }
 

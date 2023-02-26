@@ -67,13 +67,18 @@ namespace BankomatApp.UI
         internal static void DisplayAppMenu()
         {
             Console.Clear();
-            Console.WriteLine("#---Bankomaten meny----#");
-            Console.WriteLine("|                      |");
-            Console.WriteLine("| 1. Konto mängd pengar|");
-            Console.WriteLine("| 2. Insättning        |");
-            Console.WriteLine("| 3. Uttag             |");
-            Console.WriteLine("| 4. Historik          |");
-            Console.WriteLine("| 5. Logga ut          |");
+            Utility.PrintMessage(
+            "#------ Bankomaten ------#\n" +
+            "|                        |\n" +
+            "| Vad vill du göra idag? |\n" +
+            "|                        |\n" +
+            "| 1. Saldo               |\n" +
+            "| 2. Uttag               |\n" +
+            "| 3. Historik            |\n" +
+            "| 4. Insättning          |\n" +
+            "| 5. Logga ut            |\n" +
+            "|                        |\n" +
+            "#------------------------#\n", "cyan");
         }
 
         internal static void LogOutProgress()
@@ -86,7 +91,7 @@ namespace BankomatApp.UI
 
         internal static int SelectAmount()
         {
-            Console.WriteLine("");
+            Console.WriteLine("\nHur mycket vill du ta ut?\n");
             Console.WriteLine(":1.100 kr     5.1000 kr");
             Console.WriteLine(":2.200 kr     6.1500 kr");
             Console.WriteLine(":3.400 kr     7.2000 kr");

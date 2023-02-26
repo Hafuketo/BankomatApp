@@ -96,35 +96,28 @@ namespace BankomatApp
         // Checks which option was chosen
         private void ProccessMenuOption()
         {
-            switch(Validator.Convert<int>("an option:"))
+            switch(Validator.Convert<int>("Input:"))
             {
-                case (int)AppMenu.CheckBalance:
-                    //Console.WriteLine("Kontrollerar kontobalans...");
+                case 1:
                     CheckBalance();
                     break;
-                case (int)AppMenu.PlaceDeposit:
-                    //Console.WriteLine("Placerar insättning...");
-                    PlaceDeposit();
-                    break;
-                case (int)AppMenu.MakeWithdrawal:
-                    //Console.WriteLine("Gör uttag...");
+                case 2:
                     MakeWithdrawal();
                     break;
-                /*case (int)AppMenu.InternalTransfer:
-                    //Console.WriteLine("Flytta mellan konton...");
-                    //InternalTransfer();
-                    break;*/
-                case (int)AppMenu.ViewTransactions:
-                    Console.WriteLine("Ser transaktionshistorik...");
+                case 3:
                     ViewTransaction();
                     break;
-                case (int)AppMenu.Logout:
+                case 4:
+                    PlaceDeposit();
+                    break;
+                case 5:
                     AppScreen.LogOutProgress();
                     Utility.PrintMessage("Du är nu utloggad.\n\nVänligen ta ut ditt kort.", "green");
+                    Utility.PressEnterToContinue();
                     Run();
                     break;
                 default:
-                    Utility.PrintMessage("Invalid option.", "red");
+                    Utility.PrintMessage("Ogiltigt val.", "red");
                     ProccessMenuOption();
                     break;
             }
@@ -133,47 +126,19 @@ namespace BankomatApp
         // See how much money is on the account
         public void CheckBalance()
         {
-            Utility.PrintMessage($"Your account balance is: {Utility.FormatAmount(selectedAccount.AccountBalance)}", "green");
+            Console.Clear();
+
+            Utility.PrintMessage(
+            "#------ Bankomaten ------#\n" +
+            "|                        |\n" +
+            "| 1. Kortets saldo       |\n" +
+            "|                        |\n" +
+            "#------------------------#\n", "cyan");
+            Console.Write("Tillgängligt på kontot: ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"{Utility.FormatAmount(selectedAccount.AccountBalance)}");
+            Console.ForegroundColor = ConsoleColor.White;
             Utility.PressEnterToContinue();
-        }
-
-        // Deposit money to account
-        public void PlaceDeposit()
-        {
-            Console.WriteLine("\nEndast multiplicerbara med 100 kr tillåtet.\n");
-            var transaction_amt = Validator.Convert<int>($"Total summa: ");
-
-            // Simulate counting
-            Console.WriteLine("\nKontrollerar och räknar sedlar.");
-            Utility.PrintDotAnimation();
-            Console.WriteLine("");
-
-            // Some guard clause
-            if (transaction_amt < 100) {
-                Utility.PrintMessage("Beloppet måste vara minst 100, försök igen.","red");
-                return;
-            }
-            if (transaction_amt % 100 != 0)
-            {
-                Utility.PrintMessage($"Beloppet måste vara multiplicerbart med 100. Försök igen.", "red");
-                return;
-            }
-
-            if(PreviewBankNotesCount(transaction_amt) == false)
-            {
-                Utility.PrintMessage($"Du har avbrutit.", "red");
-                return;
-            }
-
-            // Bind transaction detalis to transaction object
-            InsertTransaction(selectedAccount.Id, TransactionType.Deposit, transaction_amt, "");
-
-            // Update account balance
-            selectedAccount.AccountBalance += transaction_amt;
-
-            // Print sucessmsg
-            Utility.PrintMessage($"Du har gjort en insättning på {Utility.FormatAmount(transaction_amt)}.", "green");
-     
         }
 
         // Withdraw money from account 
@@ -183,13 +148,16 @@ namespace BankomatApp
             int selectedAmount = AppScreen.SelectAmount();
             if(selectedAmount == -1)
             {
-                selectedAmount = AppScreen.SelectAmount();
-            } else if (selectedAmount != 0)
+                MakeWithdrawal();
+                return;
+            }
+            else if (selectedAmount != 0)
             {
                 transaction_amt = selectedAmount;
-            } else
+            }
+            else
             {
-                transaction_amt = Validator.Convert<int>($"amount ");
+                transaction_amt = Validator.Convert<int>($"mängd ");
             }
 
             // input validation
@@ -198,11 +166,6 @@ namespace BankomatApp
                 Utility.PrintMessage("Uttaget måste vara minst 100 kronor. Försök igen.", "red");
                 return;
             }
-            /*if(transaction_amt % 100 != 0)
-            {
-                Utility.PrintMessage("Du kan endast ta ut  can only withdraw amount in multiples of 100. Try again", "red");
-                return;
-            }*/
 
             //Business lfc validations
             if (transaction_amt > selectedAccount.AccountBalance)
@@ -221,7 +184,8 @@ namespace BankomatApp
             selectedAccount.AccountBalance -= transaction_amt;
 
             // Sucess message
-            Utility.PrintMessage($"You have sucessfully withdrawn {Utility.FormatAmount(transaction_amt)}.", "red");
+            Utility.PrintMessage($"You have successfully withdrawn " +
+                 $"{Utility.FormatAmount(transaction_amt)}.", "red");
 
         }
 
@@ -230,11 +194,13 @@ namespace BankomatApp
         {
             int fiveHundredNotesCount = amount / 500;
             int oneHundredNotesCount = (amount % 500) / 100;
+            int fiftyNotesCount = (amount % 100) / 50;
 
             Console.WriteLine("\nSummering");
             Console.WriteLine("------");
             Console.WriteLine($"500 x {fiveHundredNotesCount} = {500 * fiveHundredNotesCount}");
             Console.WriteLine($"100 x {oneHundredNotesCount} = {100 * oneHundredNotesCount}");
+            Console.WriteLine($"50 x {fiftyNotesCount} = {50 * fiftyNotesCount}");
             Console.WriteLine($"Totalt belopp: {Utility.FormatAmount(amount)}\n\n");
 
             int opt = Validator.Convert<int>("1 för att godkänna");
@@ -273,5 +239,53 @@ namespace BankomatApp
                 Utility.PrintMessage("You have some transactions", "green");
             }
         }
+
+
+        // Deposit money to account
+        public void PlaceDeposit()
+        {
+            Console.Clear();
+            Utility.PrintMessage(
+            "#------ Bankomaten ------#\n" +
+            "|                        |\n" +
+            "| 4. Kontantinsättning   |\n" +
+            "|                        |\n" +
+            "#------------------------#\n", "cyan");
+            Utility.PrintMessage("2. Insättning av kontanter\n", "cyan");
+            Console.WriteLine("\nHur mycket vill du sätta in? (Lägsta summa 100 kronor).\n");
+            var transaction_amt = Validator.Convert<int>($"Total summa: ");
+
+            // Simulate counting
+            Console.WriteLine("\nKontrollerar och räknar sedlar.");
+            Utility.PrintDotAnimation();
+            Console.WriteLine("");
+
+            // Some guard clause
+            if (transaction_amt < 1)
+            {
+                Utility.PrintMessage("Beloppet måste vara minst 1 krona, försök igen.", "red");
+                Utility.PressEnterToContinue();
+                PlaceDeposit();
+            }
+
+            /*
+            if(PreviewBankNotesCount(transaction_amt) == false)
+            {
+                Utility.PrintMessage($"Du har avbrutit.", "red");
+                Utility.PressEnterToContinue();
+                return;
+            }*/
+
+            // Bind transaction detalis to transaction object
+            InsertTransaction(selectedAccount.Id, TransactionType.Deposit, transaction_amt, "");
+
+            // Update account balance
+            selectedAccount.AccountBalance += transaction_amt;
+
+            // Print sucessmsg
+            Utility.PrintMessage($"Du har gjort en insättning på {Utility.FormatAmount(transaction_amt)}.", "green");
+
+        }
+
     }
 }
