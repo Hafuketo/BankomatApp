@@ -41,8 +41,8 @@ namespace BankomatApp
             _listOfTransactions = new List<Domain.Entities.Transaction>();
         }
 
-        // Login checker for card number and PIN
-        public void CheckUserCardNumAndPassword()
+        // Login checker for card number + PIN
+         public void CheckUserCardNumAndPassword()
         {
             bool isCorrectLogin = false;
             while (isCorrectLogin == false)
@@ -69,12 +69,10 @@ namespace BankomatApp
                             {
                                 selectedAccount.TotalLogin = 0;
                                 isCorrectLogin = true; 
-                                Console.WriteLine("0: " + isCorrectLogin);
                                 break;
                             }
                         }
                     }
-                    Console.WriteLine("1: " + isCorrectLogin);
                     if (isCorrectLogin == false)
                     {
                         Console.WriteLine($"test: {selectedAccount.FullName}");
@@ -164,28 +162,28 @@ namespace BankomatApp
                 transaction_amt = Validator.Convert<int>($"Välj belopp: ");
             }
 
-            // input validation
+            // Make sure withdrawal isn't 0 or negative
             if(transaction_amt <= 0)
             {
                 Utility.PrintMessage("Uttaget måste vara mer än 0. Försök igen.", "red");
                 Utility.PressEnterToContinue();
                 return;
             }
-
+            // Make sure withdrawal ends with 50 or 00
             if (transaction_amt % 50 != 0)
             {
                 Utility.PrintMessage("Uttag görs med 50, 100 och 500-kronorssedlar. Vänligen försök igen.", "red");
                 Utility.PressEnterToContinue();
                 return;
             }
-
-            //Business lfc validations
+            // Check if there is enough money to make withdrawal
             if (transaction_amt > selectedAccount.AccountBalance)
             {
                 Utility.PrintMessage($"Uttag misslyckades. Du har för lite pengar för att ta ut {Utility.FormatAmount(transaction_amt)}", "red");
                 Utility.PressEnterToContinue();
                 return;
             }
+
             // Bind withdrawal details to transaction object
             InsertTransaction(selectedAccount.Id, TransactionType.Withdrawal, -transaction_amt, "");
 
