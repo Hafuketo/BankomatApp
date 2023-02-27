@@ -54,7 +54,7 @@ namespace BankomatApp.UI
         internal static void LoginProgress()
         {
             Console.WriteLine("\nKontrollerar kortnummer och PIN...");
-            Utility.PrintDotAnimation();
+            Utility.LoadingAnimation();
         }
 
         internal static void PrintLockScreen()
@@ -68,13 +68,22 @@ namespace BankomatApp.UI
 
         internal static void WelcomeCustomer(string fullName)
         {
-            Console.WriteLine($"Välkommen {fullName}");
+            Utility.PrintMessage(
+            "\n           Välkommen\n\r" +
+           $"           {fullName}\n\r" +
+           "   /\\___/\\  /\n\r" +
+           "  ( >^,^< )\n\r" +
+           "   /     \\__\n\r" +
+           "   \\(_|_)__ \\\n\r" +
+           "        (___/ ", "cyan");
+
             Utility.PressEnterToContinue();
         }
 
-        internal static void DisplayAppMenu()
+        internal static void DisplayAppMenu(string fullName)
         {
             Console.Clear();
+            Utility.PrintMessage($"Användare: {fullName}", "green");
             Utility.PrintMessage(
             "#------ Bankomaten ------#\n" +
             "|                        |\n" +
@@ -91,9 +100,15 @@ namespace BankomatApp.UI
 
         internal static void LogOutProgress()
         {
-            Console.WriteLine("Tack för att du använt denna bankomat.");
-            Console.WriteLine("Välkommen åter.");
-            Utility.PrintDotAnimation();
+            Utility.PrintMessage(
+          "\n           Tack för att du använt denna bankomat.\n\r" +
+           $"           Välkommen åter.\n\r" +
+           "   /\\___/\\  /\n\r" +
+           "  ( >^,^< )\n\r" +
+           "   /     \\__\n\r" +
+           "   \\(_|_)__ \\\n\r" +
+           "        (___/ ", "cyan");
+            Utility.LoadingAnimation();
             Console.Clear();
         }
 

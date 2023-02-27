@@ -24,7 +24,7 @@ namespace BankomatApp
             AppScreen.WelcomeCustomer(selectedAccount.FullName);
             while(true)
             {
-                AppScreen.DisplayAppMenu();
+                AppScreen.DisplayAppMenu(selectedAccount.FullName);
                 ProccessMenuOption();
             }
         }
@@ -109,7 +109,15 @@ namespace BankomatApp
                     break;
                 case 5:
                     AppScreen.LogOutProgress();
-                    Utility.PrintMessage("Du är nu utloggad.\n\nVänligen ta ut ditt kort.", "green");
+                    Utility.PrintMessage(
+                     "\n           Du är nu utloggad.\n\r" +
+                      $"           Vänligen ta ditt kort.\n\r" +
+                       "   /\\___/\\  /\n\r" +
+                       "  ( >^,^< )\n\r" +
+                       "   /     \\__\n\r" +
+                       "   \\(_|_)__ \\\n\r" +
+                       "        (___/ ", "green");
+
                     Utility.PressEnterToContinue();
                     Run();
                     break;
@@ -169,6 +177,15 @@ namespace BankomatApp
                 Utility.PressEnterToContinue();
                 return;
             }
+            // Make sure withdrawal isn't above 20 000 kr
+            if (transaction_amt > 20000)
+            {
+                Utility.PrintMessage("Utag kan göras på max 20 000 kronor.", "red");
+                Utility.PrintMessage("\nOm du vill ta ut mer kan du kontakta ditt lokala kontor.", "yellow");
+                Utility.PressEnterToContinue();
+                return;
+            }
+
             // Make sure withdrawal ends with 50 or 00
             if (transaction_amt % 50 != 0)
             {
@@ -200,7 +217,7 @@ namespace BankomatApp
             // Simulate counting
             Console.Clear();
             Console.WriteLine("\nKontrollerar uttag och räknar sedlar.");
-            Utility.PrintDotAnimation();
+            Utility.LoadingAnimation();
             Console.WriteLine("");
 
             // Sucess message
@@ -289,13 +306,21 @@ namespace BankomatApp
             // Simulate counting
             Console.Clear();
             Console.WriteLine("\nKontrollerar och räknar sedlar.");
-            Utility.PrintDotAnimation();
+            Utility.LoadingAnimation();
             Console.WriteLine("");
 
             // Some guard clause
             if (transaction_amt < 1)
             {
                 Utility.PrintMessage("Beloppet måste vara minst 1 krona, försök igen.", "red");
+                Utility.PressEnterToContinue();
+                PlaceDeposit();
+            }
+
+            if (transaction_amt > 10000)
+            {
+                Utility.PrintMessage("Insättningsgränd 10 000 kronor.", "red");
+                Utility.PrintMessage("\n För att sätta in mer kan du kontakta ditt lokala kontor.", "yellow");
                 Utility.PressEnterToContinue();
                 PlaceDeposit();
             }

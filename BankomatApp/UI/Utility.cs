@@ -100,14 +100,8 @@ namespace BankomatApp.UI
             return Console.ReadLine();
         }
 
-        public static void PrintDotAnimation(int timer = 15)
+        public static void LoadingAnimation(int timer = 15)
         {
-            /*Console.Write("\nVänta...");
-            for (int i = 0; i < timer; i++)
-            {
-                Console.Write(".");
-                Thread.Sleep(100);
-            }*/
 
             Console.Write("\nVänta... ");
             for (int i = 0; i < timer; i++)
