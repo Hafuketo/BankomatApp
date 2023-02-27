@@ -91,8 +91,7 @@ namespace BankomatApp.UI
             "|                        |\n" +
             "| 1. Saldo               |\n" +
             "| 2. Uttag               |\n" +
-            "| 3. Historik            |\n" +
-            "| 4. Insättning          |\n" +
+            "| 3. Insättning          |\n" +
             "| 5. Logga ut            |\n" +
             "|                        |\n" +
             "#------------------------#\n", "cyan");
