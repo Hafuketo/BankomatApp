@@ -30,13 +30,13 @@ namespace BankomatApp
         }
 
         // Creates a list of users with accounts and pin codes
-        public void InitializeData()
+        public void InitializeData()    
         {
             userAccountList = new List<UserAccount>
             {
-                new UserAccount{Id=1, FullName = "Pishy Machmal", AccountNumber=123456,CardNumber =1, CardPin=1,AccountBalance=50000.00m,IsLocked=false},
-                new UserAccount{Id=2, FullName = "Neko Berubetto", AccountNumber=456789,CardNumber =2, CardPin=1,AccountBalance=4000.00m,IsLocked=false},
-                new UserAccount{Id=3, FullName = "Kitty Sammet", AccountNumber=123555,CardNumber =3, CardPin=1,AccountBalance=2000.00m,IsLocked=true},
+                new UserAccount{Id=1, FullName = "Pishy Machmal", AccountNumber = 123456, CardNumber = 1, CardPin = 1234, AccountBalance = 50000.00m, IsLocked = false},
+                new UserAccount{Id=2, FullName = "Neko Berubetto", AccountNumber = 456789, CardNumber = 2, CardPin = 5678, AccountBalance = 4000.00m, IsLocked = false},
+                new UserAccount{Id=3, FullName = "Kitty Sammet", AccountNumber = 123555, CardNumber = 3, CardPin = 4321, AccountBalance = 2000.00m, IsLocked = true},
             };
             _listOfTransactions = new List<Domain.Entities.Transaction>();
         }
@@ -60,7 +60,7 @@ namespace BankomatApp
                         {
                             selectedAccount = account;
 
-                            if (selectedAccount.IsLocked || selectedAccount.TotalLogin > 3)
+                            if (selectedAccount.IsLocked || selectedAccount.TotalLogin >= 3) // <--- => eller >
                             {
                                 // Print lock message
                                 AppScreen.PrintLockScreen();
@@ -72,18 +72,25 @@ namespace BankomatApp
                                 break;
                             }
                         }
-                    }
-                    if (isCorrectLogin == false)
+
+                        if (isCorrectLogin == false)
                     {
-                        Console.WriteLine($"test: {selectedAccount.FullName}");
-                        Console.WriteLine("2: " + isCorrectLogin);
+                        
                         Utility.PrintMessage("\nFelaktigt kortnummer eller PIN.", "red");
-                        selectedAccount.IsLocked = selectedAccount.TotalLogin == 3;
+                        Utility.PressEnterToContinue();
+
+                        if(selectedAccount.TotalLogin == 3)
+                        {
+                            selectedAccount.IsLocked = true;
+                        }
+
                         if (selectedAccount.IsLocked)
                         {
                             AppScreen.PrintLockScreen();
                         }
                     }
+                    }
+                    
                     Console.Clear();
                 }
             }
@@ -204,7 +211,7 @@ namespace BankomatApp
             }
 
             // Bind withdrawal details to transaction object
-            //InsertTransaction(selectedAccount.Id, TransactionType.Withdrawal, -transaction_amt, "");
+            InsertTransaction(selectedAccount.Id, TransactionType.Deposit, transaction_amt, "");
 
             // Update account balance
             selectedAccount.AccountBalance -= transaction_amt;
@@ -220,6 +227,23 @@ namespace BankomatApp
                  $"{Utility.FormatAmount(transaction_amt)}.", "green");
             Utility.PressEnterToContinue();
 
+        }
+
+        public void InsertTransaction(long _UserBankAccountId, TransactionType _tranType, decimal _tranAmount, string _desc)
+        {
+            // Create a new transaction
+            var transaction = new Domain.Entities.Transaction()
+            {
+                TransactionId = Utility.GetTransactionId(),
+                UserBankAccountId = _UserBankAccountId,
+                TransactionDate = DateTime.Now,
+                TransactionType = _tranType,
+                TransactionAmount = _tranAmount,
+                Description = _desc
+            };
+
+            // Add transaction to list
+            _listOfTransactions.Add(transaction);
         }
 
         // Shows how many bank notes will be withdrawn
@@ -250,24 +274,6 @@ namespace BankomatApp
             return opt.Equals(1);
         }
 
-        // Choosing which account for inserting
-        /*public void InsertTransaction(long _UserBankAccountId, TransactionType _tranType, decimal _tranAmount, string _desc)
-        {
-            // create a new transaction object
-            var transaction = new Domain.Entities.Transaction()
-            {
-                TransactionId = Utility.GetTransactionId(),
-                UserBankAccountId = _UserBankAccountId,
-                TransactionDate = DateTime.Now,
-                TransactionType = _tranType,
-                TransactionAmount = _tranAmount,
-                Description = _desc
-            };
-
-            // Add transaction object to the list
-            _listOfTransactions.Add(transaction);
-        }
-        */
         // Deposit money to account
         public void PlaceDeposit()
         {

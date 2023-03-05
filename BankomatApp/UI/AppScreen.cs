@@ -46,7 +46,24 @@ namespace BankomatApp.UI
 
             tempUserAccount.CardNumber = Validator.Convert<long>("Kortnummer: ");
             Console.WriteLine("");
-            tempUserAccount.CardPin = Convert.ToInt32(Utility.GetSecretInput("PIN-kod: "));
+            string pin = Utility.GetSecretInput("PIN-kod: ");
+
+            bool valid = false;
+            while (!valid)
+            {
+                try
+                {
+                    tempUserAccount.CardPin = Convert.ToInt32(pin);
+                    valid = true;
+                }
+                catch
+                {
+                    Utility.PrintMessage("\nOgiltigt val. Försök igen.", "red");
+                    pin = Utility.GetSecretInput("PIN-kod: ");
+                }
+                
+            }
+
             Console.WriteLine("");
             return tempUserAccount;
         }
@@ -62,8 +79,6 @@ namespace BankomatApp.UI
             Console.Clear();
             Utility.PrintMessage("Ditt konto har låsts. Vänligen kontakta närmaste bankkontor för att få hjälp.", "yellow");
             Utility.PressEnterToContinue();
-            //Environment.Exit(1);
-
         }
 
         internal static void WelcomeCustomer(string fullName)
@@ -92,7 +107,7 @@ namespace BankomatApp.UI
             "| 1. Saldo               |\n" +
             "| 2. Uttag               |\n" +
             "| 3. Insättning          |\n" +
-            "| 5. Logga ut            |\n" +
+            "| 4. Logga ut            |\n" +
             "|                        |\n" +
             "#------------------------#\n", "cyan");
         }

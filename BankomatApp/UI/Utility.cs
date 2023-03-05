@@ -34,13 +34,13 @@ namespace BankomatApp.UI
 
                 if (inputKey.Key == ConsoleKey.Enter)
                 {
-                    if(input.Length == 1)
+                    if(input.Length == 4)
                     {
                         break;
                     } 
                     else
                     {
-                        PrintMessage("\nVänligen fyll i PIN (1 siffra)", "red");
+                        PrintMessage("\nVänligen fyll i PIN (4 siffror)", "red");
                         input.Clear();
                         isPrompt = true;
                         continue;
