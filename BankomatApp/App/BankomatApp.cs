@@ -1,6 +1,5 @@
 ﻿using BankomatApp.Domain.Entities;
 using BankomatApp.Domain.Enums;
-using BankomatApp.Domain.Interfaces;
 using BankomatApp.UI;
 using System;
 using System.Collections.Generic;
@@ -10,7 +9,7 @@ using System.Transactions;
 
 namespace BankomatApp
 {
-    public class BankomatApp : IUserLogin, IUserAccountActions
+    public class BankomatApp 
     {
         private List<UserAccount> userAccountList;
         private UserAccount selectedAccount;
