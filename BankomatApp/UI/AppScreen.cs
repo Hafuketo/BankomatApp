@@ -114,6 +114,7 @@ namespace BankomatApp.UI
 
         internal static void LogOutProgress()
         {
+            Console.Clear();
             Utility.PrintMessage(
           "\n           Tack för att du använt denna bankomat.\n\r" +
            $"           Välkommen åter.\n\r" +
@@ -124,6 +125,16 @@ namespace BankomatApp.UI
            "        (___/ ", "cyan");
             Utility.LoadingAnimation();
             Console.Clear();
+            Utility.PrintMessage(
+                     "\n           Du är nu utloggad.\n\r" +
+                      $"           Vänligen ta ditt kort.\n\r" +
+                       "   /\\___/\\  /\n\r" +
+                       "  ( >^,^< )\n\r" +
+                       "   /     \\__\n\r" +
+                       "   \\(_|_)__ \\\n\r" +
+                       "        (___/ ", "green");
+
+            Utility.PressEnterToContinue();
         }
 
         internal static int SelectAmount()

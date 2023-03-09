@@ -8,6 +8,6 @@ namespace BankomatApp.Domain.Interfaces
 {
     public interface IUserLogin
     {
-        void CheckUserCardNumAndPassword();
+        //void CheckUserCardNumAndPassword();
     }
 }

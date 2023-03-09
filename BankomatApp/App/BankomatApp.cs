@@ -113,16 +113,6 @@ namespace BankomatApp
                     break;
                 case 4:
                     AppScreen.LogOutProgress();
-                    Utility.PrintMessage(
-                     "\n           Du är nu utloggad.\n\r" +
-                      $"           Vänligen ta ditt kort.\n\r" +
-                       "   /\\___/\\  /\n\r" +
-                       "  ( >^,^< )\n\r" +
-                       "   /     \\__\n\r" +
-                       "   \\(_|_)__ \\\n\r" +
-                       "        (___/ ", "green");
-
-                    Utility.PressEnterToContinue();
                     Run();
                     break;
                 default:
@@ -178,7 +168,6 @@ namespace BankomatApp
             {
                 // Make sure withdrawal isn't 0 or negative
                 Utility.PrintMessage("Uttaget måste vara mer än 0. Försök igen.", "red");
-                Utility.PressEnterToContinue();
                 return;
             }
             if (transaction_amt > 20000)
@@ -211,7 +200,7 @@ namespace BankomatApp
             }
 
             // Bind withdrawal details to transaction object
-            InsertTransaction(selectedAccount.Id, TransactionType.Deposit, transaction_amt, "");
+            SaveTransaction(selectedAccount.Id, TransactionType.Deposit, transaction_amt, "");
 
             // Update account balance
             selectedAccount.AccountBalance -= transaction_amt;
@@ -229,7 +218,7 @@ namespace BankomatApp
 
         }
 
-        public void InsertTransaction(long _UserBankAccountId, TransactionType _tranType, decimal _tranAmount, string _desc)
+        public void SaveTransaction(long _UserBankAccountId, TransactionType _tranType, decimal _tranAmount, string _desc)
         {
             // Create a new transaction
             var transaction = new Domain.Entities.Transaction()
@@ -285,7 +274,7 @@ namespace BankomatApp
             "|                        |\n" +
             "#------------------------#\n", "cyan");
             Utility.PrintMessage("2. Insättning av kontanter\n", "cyan");
-            Console.WriteLine("\nHur mycket vill du sätta in? (1 - 10 000 kronor).\n");
+            Console.WriteLine("\nHur mycket vill du sätta in? (1 - 2 000 kronor).\n");
             var transaction_amt = Validator.Convert<int>($"Total summa: ");
 
             // Deposit limits
@@ -295,9 +284,9 @@ namespace BankomatApp
                 Utility.PressEnterToContinue();
                 return;
             }
-            if (transaction_amt > 10000)
+            if (transaction_amt > 2000)
             {
-                Utility.PrintMessage("Insättningsgräns 10 000 kronor.", "red");
+                Utility.PrintMessage("Insättningsgräns 2 000 kronor.", "red");
                 Utility.PrintMessage("\n För att sätta in mer kan du kontakta ditt lokala kontor.", "yellow");
                 Utility.PressEnterToContinue();
                 return;
@@ -310,7 +299,7 @@ namespace BankomatApp
             Console.WriteLine("");
 
             // Bind transaction detalis to transaction object
-            //InsertTransaction(selectedAccount.Id, TransactionType.Deposit, transaction_amt, "");
+            SaveTransaction(selectedAccount.Id, TransactionType.Deposit, transaction_amt, "");
 
             // Update account balance
             selectedAccount.AccountBalance += transaction_amt;
